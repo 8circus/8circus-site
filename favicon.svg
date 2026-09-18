@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0a0a0a"/>
+  <!-- Open arc (Concept D) — the 8circus mark -->
+  <path
+    d="M 23,26 C 29,22 31,15 29,9 C 27,4 21,1 16,1 C 11,1 5,4 3,9 C 1,15 3,22 9,26"
+    stroke="#e4e0d6"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    fill="none"
+  />
+  <!-- Gold dot — the knot -->
+  <circle cx="16" cy="30" r="2.2" fill="#b8956a"/>
+</svg>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sync Catalog — 8circus</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Sync-specific */
+    #gate {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .gate-box {
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .gate-logo {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 2.5rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+
+    .gate-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-xdim);
+      margin-bottom: 2rem;
+    }
+
+    .gate-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-mid);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .gate-input:focus { border-color: var(--border-mid); }
+
+    .gate-btn {
+      display: block;
+      width: 100%;
+      font-family: var(--ff-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .gate-btn:hover {
+      color: var(--text);
+      border-color: var(--border-mid);
+    }
+
+    .gate-error {
+      font-size: 0.78rem;
+      color: rgba(184, 149, 106, 0.65);
+      margin-top: 0.85rem;
+      display: none;
+    }
+
+    /* Catalog */
+    #catalog {
+      display: none;
+      padding: 5.5rem 0 5rem;
+    }
+
+    .catalog-back {
+      position: fixed;
+      top: 1.5rem;
+      left: 2rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-xdim);
+      z-index: 100;
+      transition: color 0.2s;
+    }
+
+    .catalog-back:hover { color: var(--text-dim); }
+
+    .catalog-header {
+      text-align: center;
+      margin-bottom: 4.5rem;
+    }
+
+    .catalog-title {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 0.4rem;
+    }
+
+    .catalog-sub {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-xdim);
+    }
+
+    /* Track list */
+    .track-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .track {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .track-title {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.4rem;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .track-artist {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    .track-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-xdim);
+      border: 1px solid var(--border);
+      padding: 0.18rem 0.5rem;
+    }
+
+    .track-meta {
+      text-align: right;
+      font-size: 0.76rem;
+      color: var(--text-xdim);
+      line-height: 2;
+      white-space: nowrap;
+    }
+
+    /* Contact form */
+    .catalog-footer {
+      max-width: 800px;
+      margin: 5rem auto 0;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .catalog-footer h2 {
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .catalog-footer p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 0.6rem;
+    }
+
+    .catalog-footer a {
+      color: var(--text);
+      border-bottom: 1px solid var(--border-mid);
+      transition: border-color 0.2s;
+    }
+
+    .catalog-footer a:hover { border-color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .track {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .track-meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div id="gate">
+    <div class="gate-box">
+      <div class="gate-logo">8circus</div>
+      <p class="gate-label">Sync Catalog</p>
+      <input
+        type="password"
+        id="pw"
+        class="gate-input"
+        placeholder="Password"
+        autocomplete="current-password"
+        aria-label="Catalog password"
+      >
+      <button class="gate-btn" onclick="checkPw()">Enter</button>
+      <p class="gate-error" id="error-msg">Incorrect password. Write to <a href="mailto:sync@8circus.be" style="border-bottom:1px solid currentColor">sync@8circus.be</a> to request access.</p>
+    </div>
+  </div>
+
+  <!-- Catalog (hidden until unlocked) -->
+  <div id="catalog">
+    <a href="index.html" class="catalog-back">← 8circus</a>
+
+    <div class="container">
+      <header class="catalog-header">
+        <h1 class="catalog-title">Sync Catalog</h1>
+        <p class="catalog-sub">8circus - Ghent, Belgium - Confidential</p>
+      </header>
+
+      <div class="track-list">
+
+        <article class="track">
+          <div>
+            <h2 class="track-title">Hotel Pomeroke</h2>
+            <p class="track-artist">figtrees</p>
+            <div class="track-tags">
+              <span class="tag">cinematic</span>
+              <span class="tag">intimate</span>
+              <span class="tag">acoustic</span>
+            </div>
+          </div>
+          <div class="track-meta">
+            <div>Drama</div>
+            <div>Atmosphere</div>
+            <div>Interior</div>
+          </div>
+        </article>
+
+        <article class="track">
+          <div>
+            <h2 class="track-title">November 17</h2>
+            <p class="track-artist">figtrees</p>
+            <div class="track-tags">
+              <span class="tag">melancholic</span>
+              <span class="tag">acoustic</span>
+              <span class="tag">fragile</span>
+            </div>
+          </div>
+          <div class="track-meta">
+            <div>Emotion</div>
+            <div>Documentary</div>
+          </div>
+        </article>
+
+        <article class="track">
+          <div>
+            <h2 class="track-title">Gingerbread Choir</h2>
+            <p class="track-artist">figtrees</p>
+            <div class="track-tags">
+              <span class="tag">festive</span>
+              <span class="tag">christmas</span>
+              <span class="tag">indie</span>
+              <span class="tag">warm</span>
+            </div>
+          </div>
+          <div class="track-meta">
+            <div>Festive content</div>
+            <div>Advertising</div>
+          </div>
+        </article>
+
+        <article class="track">
+          <div>
+            <h2 class="track-title">Symbolic Violence</h2>
+            <p class="track-artist">Wired Strangers</p>
+            <div class="track-tags">
+              <span class="tag">powerful</span>
+              <span class="tag">tension</span>
+              <span class="tag">electric</span>
+            </div>
+          </div>
+          <div class="track-meta">
+            <div>Drama</div>
+            <div>Opening scene</div>
+          </div>
+        </article>
+
+        <article class="track">
+          <div>
+            <h2 class="track-title">Heroes Of Our Time</h2>
+            <p class="track-artist">Wired Strangers</p>
+            <div class="track-tags">
+              <span class="tag">anthemic</span>
+              <span class="tag">driving</span>
+              <span class="tag">electric</span>
+            </div>
+          </div>
+          <div class="track-meta">
+            <div>Montage</div>
+            <div>Sport</div>
+            <div>Campaign</div>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="catalog-footer">
+        <h2>Get in touch</h2>
+        <p>For licensing inquiries, write to <a href="mailto:sync@8circus.be">sync@8circus.be</a>. Include the title, production, intended use, and territory.</p>
+        <p>Preview files and stems available on request. All rights held by 8circus (master) and SABAM-registered authors (publishing).</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function checkPw() {
+      const val = document.getElementById('pw').value.trim();
+      const err = document.getElementById('error-msg');
+      // Simple gate — share password per mail
+      if (val === 'circus' || val === '8circus') {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('catalog').style.display = 'block';
+      } else {
+        err.style.display = 'block';
+        document.getElementById('pw').value = '';
+      }
+    }
+
+    document.getElementById('pw').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPw();
+    });
+  </script>
+
+</body>
+</html>

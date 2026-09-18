@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /sync.html
+
+Sitemap: https://8circus.be/sitemap.xml
